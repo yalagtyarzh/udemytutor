@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"log"
 	"os"
+	"strings"
 )
 
 var tmpl *template.Template
@@ -24,8 +25,19 @@ type items struct {
 	Transport []car
 }
 
+var fm = template.FuncMap{
+	"uc": strings.ToUpper,
+	"ft": firstThree,
+}
+
+func firstThree(s string) string {
+	s = strings.TrimSpace(s)
+	s = s[:3]
+	return s
+}
+
 func main() {
-	tmpl = template.Must(template.ParseGlob("./templates/*.tmpl"))
+	tmpl = template.Must(template.New("").Funcs(fm).ParseGlob("./templates/*.tmpl"))
 
 	b := sage{
 		Name:  "Buddha",
