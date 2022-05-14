@@ -9,8 +9,8 @@ import (
 var tmpl *template.Template
 
 func main() {
-	tmpl = template.Must(template.ParseGlob("templates/*.tmpl"))
-	err := tmpl.ExecuteTemplate(os.Stdout, "tmpl.tmpl", "xd")
+	tmpl = template.Must(template.ParseGlob("./templates/*.tmpl"))
+	err := tmpl.ExecuteTemplate(os.Stdout, "tmpl.tmpl", []string{"xd", "xd2"})
 	if err != nil {
 		log.Fatalln(err)
 	}

@@ -5,7 +5,10 @@
 	<title>Hello World!</title>
 </head>
 <body>
-	{{$widsom := .}}
-	<h1>The meaning of life: {{$widsom}}</h1>
+	<ul>
+		{{range .}}
+		<li>{{.Name}} - {{.Motto}}</li>
+		{{end}}
+	</ul>
 </body>
 </html>
