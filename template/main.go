@@ -1,171 +1,67 @@
 package main
 
 import (
+	"encoding/csv"
 	"html/template"
 	"log"
+	"net/http"
 	"os"
+	"strconv"
+	"time"
 )
 
-type Food struct {
-	Name        string
-	Description string
-	Price       float64
+type Record struct {
+	Date time.Time
+	Open float64
 }
-
-type Meal struct {
-	Meal  string
-	Foods []Food
-}
-
-type Menu []Meal
-
-type Restaurant struct {
-	Restaurant string
-	Menu       Menu
-}
-
-type Restaurants []Restaurant
-
-var tmpl *template.Template
 
 func main() {
-	tmpl := template.Must(template.ParseGlob("./templates/*.tmpl"))
+	http.HandleFunc("/", foo)
+	http.ListenAndServe(":8080", nil)
+}
 
-	m := Restaurants{
-		Restaurant{
-			Restaurant: "Federicos",
-			Menu: Menu{
-				Meal{
-					Meal: "Breakfast",
-					Foods: []Food{
-						Food{
-							Name:        "Oatmeal",
-							Description: "yum yum",
-							Price:       4.95,
-						},
-						Food{
-							Name:        "Cheerios",
-							Description: "American eating food traditional now",
-							Price:       3.95,
-						},
-						Food{
-							Name:        "Juice Orange",
-							Description: "Delicious drinking in throat squeezed fresh",
-							Price:       2.95,
-						},
-					},
-				},
-				Meal{
-					Meal: "Lunch",
-					Foods: []Food{
-						Food{
-							Name:        "Hamburger",
-							Description: "Delicous good eating for you",
-							Price:       6.95,
-						},
-						Food{
-							Name:        "Cheese Melted Sandwich",
-							Description: "Make cheese bread melt grease hot",
-							Price:       3.95,
-						},
-						Food{
-							Name:        "French Fries",
-							Description: "French eat potatoe fingers",
-							Price:       2.95,
-						},
-					},
-				},
-				Meal{
-					Meal: "Dinner",
-					Foods: []Food{
-						Food{
-							Name:        "Pasta Bolognese",
-							Description: "From Italy delicious eating",
-							Price:       7.95,
-						},
-						Food{
-							Name:        "Steak",
-							Description: "Dead cow grilled bloody",
-							Price:       13.95,
-						},
-						Food{
-							Name:        "Bistro Potatoe",
-							Description: "Bistro bar wood American bacon",
-							Price:       6.95,
-						},
-					},
-				},
-			},
-		},
-		Restaurant{
-			Restaurant: "Pepegos",
-			Menu: Menu{
-				Meal{
-					Meal: "Breakfast",
-					Foods: []Food{
-						Food{
-							Name:        "Oatmeal",
-							Description: "yum yum",
-							Price:       4.95,
-						},
-						Food{
-							Name:        "Cheerios",
-							Description: "American eating food traditional now",
-							Price:       3.95,
-						},
-						Food{
-							Name:        "Juice Orange",
-							Description: "Delicious drinking in throat squeezed fresh",
-							Price:       2.95,
-						},
-					},
-				},
-				Meal{
-					Meal: "Lunch",
-					Foods: []Food{
-						Food{
-							Name:        "Hamburger",
-							Description: "Delicous good eating for you",
-							Price:       6.95,
-						},
-						Food{
-							Name:        "Cheese Melted Sandwich",
-							Description: "Make cheese bread melt grease hot",
-							Price:       3.95,
-						},
-						Food{
-							Name:        "French Fries",
-							Description: "French eat potatoe fingers",
-							Price:       2.95,
-						},
-					},
-				},
-				Meal{
-					Meal: "Dinner",
-					Foods: []Food{
-						Food{
-							Name:        "Pasta Bolognese",
-							Description: "From Italy delicious eating",
-							Price:       7.95,
-						},
-						Food{
-							Name:        "Steak",
-							Description: "Dead cow grilled bloody",
-							Price:       13.95,
-						},
-						Food{
-							Name:        "Bistro Potatoe",
-							Description: "Bistro bar wood American bacon",
-							Price:       6.95,
-						},
-					},
-				},
-			},
-		},
-	}
+func foo(w http.ResponseWriter, r *http.Request) {
+	records := prs("data.csv")
 
-	err := tmpl.Execute(os.Stdout, m)
+	tmpl, err := template.ParseGlob("./templates/*.tmpl")
 	if err != nil {
 		log.Fatalln(err)
 	}
+
+	err = tmpl.Execute(w, records)
+	if err != nil {
+		log.Fatalln(err)
+	}
+}
+
+func prs(filePath string) []Record {
+	src, err := os.Open(filePath)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer src.Close()
+
+	rdr := csv.NewReader(src)
+	rows, err := rdr.ReadAll()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	records := make([]Record, 0, len(rows))
+
+	for i, row := range rows {
+		if i == 0 {
+			continue
+		}
+
+		date, _ := time.Parse("2006-01-02", row[0])
+		open, _ := strconv.ParseFloat(row[1], 64)
+
+		records = append(records, Record{
+			Date: date,
+			Open: open,
+		})
+	}
+
+	return records
 }

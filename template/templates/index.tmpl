@@ -7,13 +7,7 @@
 <body>
 
 {{range .}}
-	Restaurant - {{.Restaurant}}
-	{{range .Menu}}
-		Meal - {{.Meal}}
-    {{range .Foods}}
-        {{.Name}} - {{.Description}} - {{.Price}}
-    {{end}}
-	{{end}}
+	<li>{{.Date}} - {{.Open}}</li>
 {{end}}
 
 </body>
