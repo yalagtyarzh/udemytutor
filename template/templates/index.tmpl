@@ -2,13 +2,22 @@
 <html lang="ru">
 <head>
 	<meta charset="UTF-8">
-	<title>Hello World!</title>
+	<title>Document</title>
 </head>
 <body>
-	<h1>{{.Name}}</h1>
-	<h2>{{.Age}}</h2>
-	<h3>{{.SomeProcessing}}</h3>
-	<h3>{{.AgeDbl}}</h3>
-	<h3>{{.AgeDbl | .TakesArg}}</h3>
+
+{{range .}}
+		Years: {{.AcaYear}}<br>
+		{{.Fall.Term}}<br>
+		{{range .Fall.Courses}}
+				{{.Number}} - {{.Name}} - {{.Units}}<br>
+		{{end}}
+
+		{{.Spring.Term}}<br>
+    {{range .Spring.Courses}}
+        {{.Number}} - {{.Name}} - {{.Units}}<br>
+    {{end}}
+{{end}}
+
 </body>
 </html>
