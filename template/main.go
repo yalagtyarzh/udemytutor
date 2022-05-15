@@ -4,22 +4,40 @@ import (
 	"html/template"
 	"log"
 	"os"
-	"time"
 )
+
+type user struct {
+	Name  string
+	Motto string
+	Admin bool
+}
 
 var tmpl *template.Template
 
-var fm = template.FuncMap{
-	"fdateMDY": monthDayYear,
-}
-
-func monthDayYear(t time.Time) string {
-	return t.Format(time.Kitchen)
-}
-
 func main() {
-	tmpl := template.Must(template.New("").Funcs(fm).ParseGlob("./templates/*.tmpl"))
-	err := tmpl.ExecuteTemplate(os.Stdout, "tmpl.tmpl", time.Now())
+	tmpl := template.Must(template.ParseGlob("./templates/*.tmpl"))
+
+	u1 := user{
+		Name:  "Buddha",
+		Motto: "Be the change",
+		Admin: false,
+	}
+
+	u2 := user{
+		Name:  "Gandhi",
+		Motto: "Be the change",
+		Admin: true,
+	}
+
+	u3 := user{
+		Name:  "",
+		Motto: "Nobody",
+		Admin: true,
+	}
+
+	users := []user{u1, u2, u3}
+
+	err := tmpl.Execute(os.Stdout, users)
 	if err != nil {
 		log.Fatalln(err)
 	}
