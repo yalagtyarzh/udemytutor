@@ -6,70 +6,81 @@ import (
 	"os"
 )
 
-type course struct {
-	Number string
+type Regions []Region
+
+type Region struct {
 	Name   string
-	Units  string
+	Hotels []Hotel
 }
 
-type semester struct {
-	Term    string
-	Courses []course
-}
-
-type year struct {
-	AcaYear string
-	Fall    semester
-	Spring  semester
-	Summer  semester
+type Hotel struct {
+	Name    string
+	Address string
+	City    string
+	Zip     string
+	Region
 }
 
 var tmpl *template.Template
 
 func main() {
 	tmpl := template.Must(template.ParseGlob("./templates/*.tmpl"))
-	years := []year{
-		year{
-			AcaYear: "2020-2021",
-			Fall: semester{
-				Term: "Fall",
-				Courses: []course{
-					course{"CSCI-40", "Introduction to Programming in Go", "4"},
-					course{"CSCI-130", "Introduction to Web Programming with Go", "4"},
-					course{"CSCI-140", "Mobile Apps Using Go", "4"},
+
+	h := Regions{
+		Region{
+			Name: "Southern",
+			Hotels: []Hotel{
+				Hotel{
+					Name:    "Hotel California",
+					Address: "42 Sunset Boulevard",
+					City:    "Los Angeles",
+					Zip:     "95612",
 				},
-			},
-			Spring: semester{
-				Term: "Spring",
-				Courses: []course{
-					course{"CSCI-50", "Advanced Go", "5"},
-					course{"CSCI-190", "Advanced Web Programming with Go", "5"},
-					course{"CSCI-191", "Advanced Mobile Apps With Go", "5"},
+				Hotel{
+					Name:    "H",
+					Address: "4",
+					City:    "L",
+					Zip:     "95612",
 				},
 			},
 		},
-		year{
-			AcaYear: "2021-2022",
-			Fall: semester{
-				Term: "Fall",
-				Courses: []course{
-					course{"CSCI-40", "Introduction to Programming in Go", "4"},
-					course{"CSCI-130", "Introduction to Web Programming with Go", "4"},
-					course{"CSCI-140", "Mobile Apps Using Go", "4"},
+		Region{
+			Name: "Central",
+			Hotels: []Hotel{
+				Hotel{
+					Name:    "Hotel California",
+					Address: "42 Sunset Boulevard",
+					City:    "Los Angeles",
+					Zip:     "95612",
+				},
+				Hotel{
+					Name:    "H",
+					Address: "4",
+					City:    "L",
+					Zip:     "95612",
 				},
 			},
-			Spring: semester{
-				Term: "Spring",
-				Courses: []course{
-					course{"CSCI-50", "Advanced Go", "5"},
-					course{"CSCI-190", "Advanced Web Programming with Go", "5"},
-					course{"CSCI-191", "Advanced Mobile Apps With Go", "5"},
+		},
+		Region{
+			Name: "Nortern",
+			Hotels: []Hotel{
+				Hotel{
+					Name:    "Hotel California",
+					Address: "42 Sunset Boulevard",
+					City:    "Los Angeles",
+					Zip:     "95612",
+				},
+				Hotel{
+					Name:    "H",
+					Address: "4",
+					City:    "L",
+					Zip:     "95612",
 				},
 			},
 		},
 	}
 
-	err := tmpl.Execute(os.Stdout, years)
+	err := tmpl.Execute(os.Stdout, h)
 	if err != nil {
 		log.Fatalln(err)
 	}

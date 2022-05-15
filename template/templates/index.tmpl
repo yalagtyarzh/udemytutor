@@ -7,16 +7,13 @@
 <body>
 
 {{range .}}
-		Years: {{.AcaYear}}<br>
-		{{.Fall.Term}}<br>
-		{{range .Fall.Courses}}
-				{{.Number}} - {{.Name}} - {{.Units}}<br>
-		{{end}}
-
-		{{.Spring.Term}}<br>
-    {{range .Spring.Courses}}
-        {{.Number}} - {{.Name}} - {{.Units}}<br>
-    {{end}}
+	Region: {{.Name}}
+	{{range .Hotels}}
+			Name: {{.Name}}
+			Address: {{.Address}}
+			City: {{.City}}
+			Zip: {{.Zip}}
+	{{end}}
 {{end}}
 
 </body>
