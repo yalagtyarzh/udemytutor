@@ -7,9 +7,12 @@
 <body>
 
 {{range .}}
-	Meal - {{.Meal}}
-	{{range .Foods}}
-			{{.Name}} - {{.Description}} - {{.Price}}
+	Restaurant - {{.Restaurant}}
+	{{range .Menu}}
+		Meal - {{.Meal}}
+    {{range .Foods}}
+        {{.Name}} - {{.Description}} - {{.Price}}
+    {{end}}
 	{{end}}
 {{end}}
 
