@@ -6,81 +6,88 @@ import (
 	"os"
 )
 
-type Regions []Region
-
-type Region struct {
-	Name   string
-	Hotels []Hotel
+type Food struct {
+	Name        string
+	Description string
+	Price       float64
 }
 
-type Hotel struct {
-	Name    string
-	Address string
-	City    string
-	Zip     string
-	Region
+type Meal struct {
+	Meal  string
+	Foods []Food
 }
+
+type Menu []Meal
 
 var tmpl *template.Template
 
 func main() {
 	tmpl := template.Must(template.ParseGlob("./templates/*.tmpl"))
 
-	h := Regions{
-		Region{
-			Name: "Southern",
-			Hotels: []Hotel{
-				Hotel{
-					Name:    "Hotel California",
-					Address: "42 Sunset Boulevard",
-					City:    "Los Angeles",
-					Zip:     "95612",
+	m := Menu{
+		Meal{
+			Meal: "Breakfast",
+			Foods: []Food{
+				Food{
+					Name:        "Oatmeal",
+					Description: "yum yum",
+					Price:       4.95,
 				},
-				Hotel{
-					Name:    "H",
-					Address: "4",
-					City:    "L",
-					Zip:     "95612",
+				Food{
+					Name:        "Cheerios",
+					Description: "American eating food traditional now",
+					Price:       3.95,
 				},
-			},
-		},
-		Region{
-			Name: "Central",
-			Hotels: []Hotel{
-				Hotel{
-					Name:    "Hotel California",
-					Address: "42 Sunset Boulevard",
-					City:    "Los Angeles",
-					Zip:     "95612",
-				},
-				Hotel{
-					Name:    "H",
-					Address: "4",
-					City:    "L",
-					Zip:     "95612",
+				Food{
+					Name:        "Juice Orange",
+					Description: "Delicious drinking in throat squeezed fresh",
+					Price:       2.95,
 				},
 			},
 		},
-		Region{
-			Name: "Nortern",
-			Hotels: []Hotel{
-				Hotel{
-					Name:    "Hotel California",
-					Address: "42 Sunset Boulevard",
-					City:    "Los Angeles",
-					Zip:     "95612",
+		Meal{
+			Meal: "Lunch",
+			Foods: []Food{
+				Food{
+					Name:        "Hamburger",
+					Description: "Delicous good eating for you",
+					Price:       6.95,
 				},
-				Hotel{
-					Name:    "H",
-					Address: "4",
-					City:    "L",
-					Zip:     "95612",
+				Food{
+					Name:        "Cheese Melted Sandwich",
+					Description: "Make cheese bread melt grease hot",
+					Price:       3.95,
+				},
+				Food{
+					Name:        "French Fries",
+					Description: "French eat potatoe fingers",
+					Price:       2.95,
+				},
+			},
+		},
+		Meal{
+			Meal: "Dinner",
+			Foods: []Food{
+				Food{
+					Name:        "Pasta Bolognese",
+					Description: "From Italy delicious eating",
+					Price:       7.95,
+				},
+				Food{
+					Name:        "Steak",
+					Description: "Dead cow grilled bloody",
+					Price:       13.95,
+				},
+				Food{
+					Name:        "Bistro Potatoe",
+					Description: "Bistro bar wood American bacon",
+					Price:       6.95,
 				},
 			},
 		},
 	}
 
-	err := tmpl.Execute(os.Stdout, h)
+	err := tmpl.Execute(os.Stdout, m)
 	if err != nil {
 		log.Fatalln(err)
 	}

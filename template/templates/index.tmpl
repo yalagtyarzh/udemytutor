@@ -7,12 +7,9 @@
 <body>
 
 {{range .}}
-	Region: {{.Name}}
-	{{range .Hotels}}
-			Name: {{.Name}}
-			Address: {{.Address}}
-			City: {{.City}}
-			Zip: {{.Zip}}
+	Meal - {{.Meal}}
+	{{range .Foods}}
+			{{.Name}} - {{.Description}} - {{.Price}}
 	{{end}}
 {{end}}
 
