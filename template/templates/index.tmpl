@@ -5,7 +5,14 @@
 	<title>Hello World!</title>
 </head>
 <body>
-	<h1>The meaning of life: {{.}}</h1>
-	<p>{{template "polarbear" .}}</p>
+	{{.Fall.Term}}<br>
+	{{range .Fall.Courses}}
+	{{.Number}} - {{.Name}} - {{.Units}}<br>
+	{{end}}
+
+	{{.Spring.Term}}<br>
+	{{range .Spring.Courses}}
+	{{.Number}} - {{.Name}} - {{.Units}}<br>
+	{{end}}
 </body>
 </html>
