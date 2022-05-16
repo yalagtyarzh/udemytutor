@@ -37,9 +37,9 @@ func request(conn net.Conn) {
 	for scanner.Scan() {
 		ln := scanner.Text()
 		fmt.Println(ln)
-		if i == 0 {
-			m := strings.Fields(ln)[0]
-			fmt.Println("***METHOD", m)
+		if i == 1 {
+			m := strings.Fields(ln)[1]
+			fmt.Println("***URL", m)
 		}
 
 		if ln == "" {
