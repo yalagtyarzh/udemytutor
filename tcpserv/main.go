@@ -3,18 +3,35 @@ package main
 import (
 	"log"
 	"net/http"
+	"net/url"
 	"text/template"
 )
 
 type hotdog int
 
-func (m hotdog) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	err := req.ParseForm()
+func (m hotdog) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	tmpl.ExecuteTemplate(w, "index.gohtml", req.Form)
+	data := struct {
+		Method        string
+		URL           *url.URL
+		Submissions   map[string][]string
+		Header        http.Header
+		Host          string
+		ContentLength int64
+	}{
+		r.Method,
+		r.URL,
+		r.Form,
+		r.Header,
+		r.Host,
+		r.ContentLength,
+	}
+
+	tmpl.ExecuteTemplate(w, "index.gohtml", data)
 }
 
 var tmpl *template.Template
