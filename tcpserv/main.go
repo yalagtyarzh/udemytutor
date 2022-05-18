@@ -1,19 +1,22 @@
 package main
 
 import (
-	"fmt"
+	"io"
 	"net/http"
 )
 
-type hotdog int
+func dog(w http.ResponseWriter, r *http.Request) {
+	io.WriteString(w, "dog dog doggy")
+}
 
-func (m hotdog) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Alister-key", "this is from Alister")
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	fmt.Fprintln(w, "<h1>Any code I want in this func</h1>")
+func cat(w http.ResponseWriter, r *http.Request) {
+	io.WriteString(w, "cat cat cat")
 }
 
 func main() {
-	var d hotdog
-	http.ListenAndServe(":8080", d)
+
+	http.HandleFunc("/dog/", dog)
+	http.HandleFunc("/cat/", cat)
+
+	http.ListenAndServe(":8080", nil)
 }
