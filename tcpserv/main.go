@@ -1,29 +1,11 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"io"
 	"log"
 	"net"
 )
-
-func handle(conn net.Conn) {
-	defer conn.Close()
-	scanner := bufio.NewScanner(conn)
-	io.WriteString(conn, "I see you connected\n")
-	for scanner.Scan() {
-		ln := scanner.Text()
-		if ln == "" {
-			break
-		}
-
-		fmt.Println(ln)
-		io.WriteString(conn, fmt.Sprint(ln, "\n"))
-	}
-
-	fmt.Println("Code got here")
-}
 
 func main() {
 	ln, err := net.Listen("tcp", ":8080")
@@ -40,4 +22,17 @@ func main() {
 
 		go handle(conn)
 	}
+}
+
+func handle(conn net.Conn) {
+	defer conn.Close()
+	request(conn)
+}
+
+func request(conn net.Conn) {
+	body := "xd"
+	io.WriteString(conn, "HTTP/1.1 200 OK\r\n")
+	fmt.Fprintf(conn, "Content-Length %d\r\n", len(body))
+	fmt.Fprint(conn, "Content-Type: text/plain\r\n")
+	io.WriteString(conn, "\r\n")
 }
