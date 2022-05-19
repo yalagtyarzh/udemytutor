@@ -11,13 +11,18 @@ import (
 func handle(conn net.Conn) {
 	defer conn.Close()
 	scanner := bufio.NewScanner(conn)
+	io.WriteString(conn, "I see you connected\n")
 	for scanner.Scan() {
 		ln := scanner.Text()
+		if ln == "" {
+			break
+		}
+
 		fmt.Println(ln)
+		io.WriteString(conn, fmt.Sprint(ln, "\n"))
 	}
 
 	fmt.Println("Code got here")
-	io.WriteString(conn, "I see you connected")
 }
 
 func main() {
