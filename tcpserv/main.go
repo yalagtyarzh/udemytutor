@@ -1,30 +1,29 @@
 package main
 
 import (
-	"net/http"
-	"text/template"
+	"io"
+	"log"
+	"net"
 )
 
-func dog(w http.ResponseWriter, r *http.Request) {
-	tmpl.ExecuteTemplate(w, "template.gohtml", "dog")
+func handle(conn net.Conn) {
+	defer conn.Close()
+	io.WriteString(conn, "I see you conntected")
 }
-
-func index(w http.ResponseWriter, r *http.Request) {
-	tmpl.ExecuteTemplate(w, "template.gohtml", "home")
-}
-
-func me(w http.ResponseWriter, r *http.Request) {
-	tmpl.ExecuteTemplate(w, "template.gohtml", "Alister")
-}
-
-var tmpl *template.Template
 
 func main() {
-	tmpl = template.Must(template.ParseGlob("templates/*.gohtml"))
+	ln, err := net.Listen("tcp", ":8080")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer ln.Close()
 
-	http.Handle("/", http.HandlerFunc(index))
-	http.Handle("/dog/", http.HandlerFunc(dog))
-	http.Handle("/me/", http.HandlerFunc(me))
+	for {
+		conn, err := ln.Accept()
+		if err != nil {
+			log.Fatalln(err)
+		}
 
-	http.ListenAndServe(":8080", nil)
+		go handle(conn)
+	}
 }
