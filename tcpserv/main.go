@@ -1,22 +1,20 @@
 package main
 
 import (
-	"io"
 	"net/http"
 	"text/template"
 )
 
 func dog(w http.ResponseWriter, r *http.Request) {
-	io.WriteString(w, "dog dog doggy")
+	tmpl.ExecuteTemplate(w, "template.gohtml", "dog")
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
-	io.WriteString(w, "home")
+	tmpl.ExecuteTemplate(w, "template.gohtml", "home")
 }
 
 func me(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
-	io.WriteString(w, "Alister")
+	tmpl.ExecuteTemplate(w, "template.gohtml", "Alister")
 }
 
 var tmpl *template.Template
