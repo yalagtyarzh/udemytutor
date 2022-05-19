@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bufio"
+	"fmt"
 	"io"
 	"log"
 	"net"
@@ -8,7 +10,14 @@ import (
 
 func handle(conn net.Conn) {
 	defer conn.Close()
-	io.WriteString(conn, "I see you conntected")
+	scanner := bufio.NewScanner(conn)
+	for scanner.Scan() {
+		ln := scanner.Text()
+		fmt.Println(ln)
+	}
+
+	fmt.Println("Code got here")
+	io.WriteString(conn, "I see you connected")
 }
 
 func main() {
