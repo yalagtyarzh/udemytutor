@@ -1,17 +1,31 @@
 package main
 
 import (
+	"html/template"
 	"io"
+	"log"
 	"net/http"
 )
 
 func main() {
-	http.HandleFunc("/", dog)
-	http.Handle("/resources/", http.StripPrefix("/resources", http.FileServer(http.Dir("./assets"))))
+	http.HandleFunc("/", foo)
+	http.HandleFunc("/dog/", dog)
+	http.HandleFunc("/dog.jpg", dogPic)
 	http.ListenAndServe(":8080", nil)
 }
 
+func foo(w http.ResponseWriter, r *http.Request) {
+	io.WriteString(w, "foo ran")
+}
+
 func dog(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	io.WriteString(w, `<img src="/resources/toby.jpg">`)
+	tmpl, err := template.ParseFiles("dog.gohtml")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	tmpl.ExecuteTemplate(w, "dog.gohtml", nil)
+}
+
+func dogPic(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "dog.jpg")
 }
