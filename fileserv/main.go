@@ -6,16 +6,12 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/", dog)
-	http.HandleFunc("/toby.jpg", dogPic)
-	http.ListenAndServe("localhost:8080", nil)
+	http.Handle("/", http.FileServer(http.Dir(".")))
+	http.HandleFunc("/dog", dog)
+	http.ListenAndServe(":8080", nil)
 }
 
 func dog(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	io.WriteString(w, `<img src="./toby.jpg">`)
-}
-
-func dogPic(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "toby.jpg")
+	io.WriteString(w, `<img src="toby.jpg">`)
 }
